@@ -1,0 +1,27 @@
+cmake_minimum_required(VERSION 3.12)
+project(TCPSocketExample)
+
+set(CMAKE_CXX_STANDARD 14)
+
+# Thêm thư viện WS2_32.lib cho Winsock
+if (WIN32)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lws2_32")
+endif ()
+
+# Tìm và thêm thư viện Threads cho UNIX
+if (UNIX)
+    find_package(Threads REQUIRED)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_THREAD_LIBS_INIT}")
+endif ()
+
+# Biên dịch và tạo chương trình client từ client.cpp
+add_executable(client client.cpp)
+
+# Biên dịch và tạo chương trình server từ server.cpp
+add_executable(server server.cpp)
+
+# Thêm các sự kiện liên kết
+if (WIN32)
+    target_link_libraries(client wsock32 ws2_32)
+    target_link_libraries(server wsock32 ws2_32)
+endif ()
